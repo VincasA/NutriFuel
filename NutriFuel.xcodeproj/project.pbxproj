@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		056439C42D53E9FC00D2C9A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 056439A62D53E9F900D2C9A9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 056439AD2D53E9F900D2C9A9;
+			remoteInfo = NutriFuel;
+		};
+		056439CE2D53E9FC00D2C9A9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 056439A62D53E9F900D2C9A9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 056439AD2D53E9F900D2C9A9;
+			remoteInfo = NutriFuel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		056439AE2D53E9F900D2C9A9 /* NutriFuel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NutriFuel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		056439C32D53E9FC00D2C9A9 /* NutriFuelTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NutriFuelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		056439CD2D53E9FC00D2C9A9 /* NutriFuelUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NutriFuelUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		056439B02D53E9F900D2C9A9 /* NutriFuel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NutriFuel;
+			sourceTree = "<group>";
+		};
+		056439C62D53E9FC00D2C9A9 /* NutriFuelTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NutriFuelTests;
+			sourceTree = "<group>";
+		};
+		056439D02D53E9FC00D2C9A9 /* NutriFuelUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NutriFuelUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		056439AB2D53E9F900D2C9A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		056439C02D53E9FC00D2C9A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		056439CA2D53E9FC00D2C9A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		056439A52D53E9F900D2C9A9 = {
+			isa = PBXGroup;
+			children = (
+				056439B02D53E9F900D2C9A9 /* NutriFuel */,
+				056439C62D53E9FC00D2C9A9 /* NutriFuelTests */,
+				056439D02D53E9FC00D2C9A9 /* NutriFuelUITests */,
+				056439AF2D53E9F900D2C9A9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		056439AF2D53E9F900D2C9A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				056439AE2D53E9F900D2C9A9 /* NutriFuel.app */,
+				056439C32D53E9FC00D2C9A9 /* NutriFuelTests.xctest */,
+				056439CD2D53E9FC00D2C9A9 /* NutriFuelUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		056439AD2D53E9F900D2C9A9 /* NutriFuel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 056439D72D53E9FC00D2C9A9 /* Build configuration list for PBXNativeTarget "NutriFuel" */;
+			buildPhases = (
+				056439AA2D53E9F900D2C9A9 /* Sources */,
+				056439AB2D53E9F900D2C9A9 /* Frameworks */,
+				056439AC2D53E9F900D2C9A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				056439B02D53E9F900D2C9A9 /* NutriFuel */,
+			);
+			name = NutriFuel;
+			packageProductDependencies = (
+			);
+			productName = NutriFuel;
+			productReference = 056439AE2D53E9F900D2C9A9 /* NutriFuel.app */;
+			productType = "com.apple.product-type.application";
+		};
+		056439C22D53E9FC00D2C9A9 /* NutriFuelTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 056439DA2D53E9FC00D2C9A9 /* Build configuration list for PBXNativeTarget "NutriFuelTests" */;
+			buildPhases = (
+				056439BF2D53E9FC00D2C9A9 /* Sources */,
+				056439C02D53E9FC00D2C9A9 /* Frameworks */,
+				056439C12D53E9FC00D2C9A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				056439C52D53E9FC00D2C9A9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				056439C62D53E9FC00D2C9A9 /* NutriFuelTests */,
+			);
+			name = NutriFuelTests;
+			packageProductDependencies = (
+			);
+			productName = NutriFuelTests;
+			productReference = 056439C32D53E9FC00D2C9A9 /* NutriFuelTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		056439CC2D53E9FC00D2C9A9 /* NutriFuelUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 056439DD2D53E9FC00D2C9A9 /* Build configuration list for PBXNativeTarget "NutriFuelUITests" */;
+			buildPhases = (
+				056439C92D53E9FC00D2C9A9 /* Sources */,
+				056439CA2D53E9FC00D2C9A9 /* Frameworks */,
+				056439CB2D53E9FC00D2C9A9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				056439CF2D53E9FC00D2C9A9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				056439D02D53E9FC00D2C9A9 /* NutriFuelUITests */,
+			);
+			name = NutriFuelUITests;
+			packageProductDependencies = (
+			);
+			productName = NutriFuelUITests;
+			productReference = 056439CD2D53E9FC00D2C9A9 /* NutriFuelUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		056439A62D53E9F900D2C9A9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					056439AD2D53E9F900D2C9A9 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					056439C22D53E9FC00D2C9A9 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 056439AD2D53E9F900D2C9A9;
+					};
+					056439CC2D53E9FC00D2C9A9 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 056439AD2D53E9F900D2C9A9;
+					};
+				};
+			};
+			buildConfigurationList = 056439A92D53E9F900D2C9A9 /* Build configuration list for PBXProject "NutriFuel" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 056439A52D53E9F900D2C9A9;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 056439AF2D53E9F900D2C9A9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				056439AD2D53E9F900D2C9A9 /* NutriFuel */,
+				056439C22D53E9FC00D2C9A9 /* NutriFuelTests */,
+				056439CC2D53E9FC00D2C9A9 /* NutriFuelUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		056439AC2D53E9F900D2C9A9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		056439C12D53E9FC00D2C9A9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		056439CB2D53E9FC00D2C9A9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		056439AA2D53E9F900D2C9A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		056439BF2D53E9FC00D2C9A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		056439C92D53E9FC00D2C9A9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		056439C52D53E9FC00D2C9A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 056439AD2D53E9F900D2C9A9 /* NutriFuel */;
+			targetProxy = 056439C42D53E9FC00D2C9A9 /* PBXContainerItemProxy */;
+		};
+		056439CF2D53E9FC00D2C9A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 056439AD2D53E9F900D2C9A9 /* NutriFuel */;
+			targetProxy = 056439CE2D53E9FC00D2C9A9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		056439D52D53E9FC00D2C9A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		056439D62D53E9FC00D2C9A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		056439D82D53E9FC00D2C9A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NutriFuel/Preview Content\"";
+				DEVELOPMENT_TEAM = LNNG9B7CAT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nutrifuel.com.NutriFuel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		056439D92D53E9FC00D2C9A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NutriFuel/Preview Content\"";
+				DEVELOPMENT_TEAM = LNNG9B7CAT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nutrifuel.com.NutriFuel;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		056439DB2D53E9FC00D2C9A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LNNG9B7CAT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nutrifuel.com.NutriFuelTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NutriFuel.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NutriFuel";
+			};
+			name = Debug;
+		};
+		056439DC2D53E9FC00D2C9A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LNNG9B7CAT;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nutrifuel.com.NutriFuelTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NutriFuel.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NutriFuel";
+			};
+			name = Release;
+		};
+		056439DE2D53E9FC00D2C9A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LNNG9B7CAT;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nutrifuel.com.NutriFuelUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NutriFuel;
+			};
+			name = Debug;
+		};
+		056439DF2D53E9FC00D2C9A9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LNNG9B7CAT;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = nutrifuel.com.NutriFuelUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NutriFuel;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		056439A92D53E9F900D2C9A9 /* Build configuration list for PBXProject "NutriFuel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				056439D52D53E9FC00D2C9A9 /* Debug */,
+				056439D62D53E9FC00D2C9A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		056439D72D53E9FC00D2C9A9 /* Build configuration list for PBXNativeTarget "NutriFuel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				056439D82D53E9FC00D2C9A9 /* Debug */,
+				056439D92D53E9FC00D2C9A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		056439DA2D53E9FC00D2C9A9 /* Build configuration list for PBXNativeTarget "NutriFuelTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				056439DB2D53E9FC00D2C9A9 /* Debug */,
+				056439DC2D53E9FC00D2C9A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		056439DD2D53E9FC00D2C9A9 /* Build configuration list for PBXNativeTarget "NutriFuelUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				056439DE2D53E9FC00D2C9A9 /* Debug */,
+				056439DF2D53E9FC00D2C9A9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 056439A62D53E9F900D2C9A9 /* Project object */;
+}
