@@ -9,12 +9,12 @@ import SwiftUI
 
 @main
 struct NutriFuelApp: App {
-    let persistenceController = PersistenceController.shared
-
+    @StateObject var appData = AppData()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            MainTabView()  // Your main view with tabs
+                .environmentObject(appData)
         }
     }
 }
