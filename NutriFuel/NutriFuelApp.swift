@@ -1,19 +1,12 @@
-//
-//  NutriFuelApp.swift
-//  NutriFuel
-//
-//  Created by Vincas Anikevičius on 05/02/2025.
-//
-
 import SwiftUI
 
 @main
 struct NutriFuelApp: App {
-    @StateObject var appData = AppData()
+    @StateObject private var appData = AppData()
     
     var body: some Scene {
         WindowGroup {
-            MainTabView()  // Your main view with tabs
+            MainTabView()
                 .environmentObject(appData)
         }
     }

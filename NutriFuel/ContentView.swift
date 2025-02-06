@@ -1,42 +1,47 @@
-//
-//  ContentView.swift
-//  NutriFuel
-//
-//  Created by Vincas Anikevičius on 05/02/2025.
-//
-
 import SwiftUI
 
 // MARK: - Data Models
 
-/// A food that the user can save and later add to his diary.
-struct Food: Identifiable, Codable, Equatable {
-    var id = UUID()
-    var name: String
-    var kcals: Double
-    var protein: Double
-    var carbs: Double
-    var fats: Double
-    var sugars: Double
+enum IngredientType: String, Codable, CaseIterable {
+    case solid = "Solid"
+    case liquid = "Liquid"
 }
 
-enum MealCategory: String, CaseIterable, Codable {
+enum IngredientCategory: String, Codable, CaseIterable {
+    case meat = "Meat"
+    case vegetables = "Vegetables"
+    case fruits = "Fruits"
+    case dairy = "Dairy"
+    case grains = "Grains"
+    case oils = "Oils"
+    case others = "Others"
+}
+
+struct Ingredient: Identifiable, Codable, Hashable {
+    var id = UUID()
+    var name: String
+    var type: IngredientType
+    var kcalsPer100: Double
+    var proteinPer100: Double
+    var carbsPer100: Double
+    var fatsPer100: Double
+    var sugarsPer100: Double
+    var category: IngredientCategory = .others
+}
+
+struct FoodIngredient: Identifiable, Codable {
+    var id = UUID()
+    var ingredient: Ingredient
+    var amount: Double // In grams or milliliters
+}
+
+enum MealType: String, Codable, CaseIterable {
     case breakfast = "Breakfast"
     case lunch = "Lunch"
     case dinner = "Dinner"
     case snacks = "Snacks"
-    case uncategorized = "Uncategorized"
 }
 
-/// An entry in the diary (a food eaten on a specific date).
-struct DiaryEntry: Identifiable, Codable, Equatable {
-    var id = UUID()
-    var date: Date
-    var food: Food
-    var category: MealCategory // NEW
-}
-
-/// The user’s goals/limits for each macro.
 struct MacroGoals: Codable {
     var kcals: Double
     var protein: Double
@@ -45,12 +50,73 @@ struct MacroGoals: Codable {
     var sugars: Double
 }
 
+/// Food is either built from ingredients or, for a quick add, using manually entered macros.
+struct Food: Identifiable, Codable {
+    var id = UUID()
+    var name: String
+    var ingredients: [FoodIngredient]
+    var portionName: String
+    var portionSize: Double
+    var manualMacros: MacroGoals? = nil
+    
+    var totalKcals: Double {
+        if let manual = manualMacros { return manual.kcals }
+        let total = ingredients.reduce(0) { $0 + ($1.ingredient.kcalsPer100 * ($1.amount / 100)) }
+        return portionSize > 0 ? total / portionSize : total
+    }
+    var totalProtein: Double {
+        if let manual = manualMacros { return manual.protein }
+        let total = ingredients.reduce(0) { $0 + ($1.ingredient.proteinPer100 * ($1.amount / 100)) }
+        return portionSize > 0 ? total / portionSize : total
+    }
+    var totalCarbs: Double {
+        if let manual = manualMacros { return manual.carbs }
+        let total = ingredients.reduce(0) { $0 + ($1.ingredient.carbsPer100 * ($1.amount / 100)) }
+        return portionSize > 0 ? total / portionSize : total
+    }
+    var totalFats: Double {
+        if let manual = manualMacros { return manual.fats }
+        let total = ingredients.reduce(0) { $0 + ($1.ingredient.fatsPer100 * ($1.amount / 100)) }
+        return portionSize > 0 ? total / portionSize : total
+    }
+    var totalSugars: Double {
+        if let manual = manualMacros { return manual.sugars }
+        let total = ingredients.reduce(0) { $0 + ($1.ingredient.sugarsPer100 * ($1.amount / 100)) }
+        return portionSize > 0 ? total / portionSize : total
+    }
+}
+
+struct DiaryEntry: Identifiable, Codable {
+    var id = UUID()
+    var date: Date
+    var mealType: MealType
+    var food: Food
+    var portionSize: Double
+}
+
 // MARK: - Global App Data
 
 class AppData: ObservableObject {
-    @Published var savedFoods: [Food] = []
+    @Published var savedIngredients: [Ingredient] = [
+        Ingredient(name: "Chicken Breast", type: .solid, kcalsPer100: 165, proteinPer100: 31, carbsPer100: 0, fatsPer100: 3.6, sugarsPer100: 0, category: .meat),
+        Ingredient(name: "Olive Oil", type: .liquid, kcalsPer100: 884, proteinPer100: 0, carbsPer100: 0, fatsPer100: 100, sugarsPer100: 0, category: .oils)
+    ]
+    
+    @Published var savedFoods: [Food] = [
+        Food(
+            name: "Grilled Chicken Salad",
+            ingredients: [
+                FoodIngredient(ingredient: Ingredient(name: "Chicken Breast", type: .solid, kcalsPer100: 165, proteinPer100: 31, carbsPer100: 0, fatsPer100: 3.6, sugarsPer100: 0, category: .meat), amount: 200),
+                FoodIngredient(ingredient: Ingredient(name: "Olive Oil", type: .liquid, kcalsPer100: 884, proteinPer100: 0, carbsPer100: 0, fatsPer100: 100, sugarsPer100: 0, category: .oils), amount: 10)
+            ],
+            portionName: "Plate",
+            portionSize: 1
+        )
+    ]
+    
     @Published var diaryEntries: [DiaryEntry] = []
-    @Published var macroGoals: MacroGoals = MacroGoals(kcals: 0, protein: 0, carbs: 0, fats: 0, sugars: 0)
+    
+    @Published var macroGoals: MacroGoals = MacroGoals(kcals: 2000, protein: 75, carbs: 250, fats: 70, sugars: 50)
 }
 
 // MARK: - Main Tab View
@@ -59,362 +125,172 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             DiaryView()
-                .tabItem {
-                    Label("Diary", systemImage: "book")
-                }
+                .tabItem { Label("Diary", systemImage: "book") }
             FoodsView()
-                .tabItem {
-                    Label("Foods", systemImage: "list.bullet")
-                }
+                .tabItem { Label("Foods", systemImage: "list.bullet") }
+            IngredientsView()
+                .tabItem { Label("Ingredients", systemImage: "leaf") }
             SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
+                .tabItem { Label("Settings", systemImage: "gear") }
         }
     }
 }
 
-// MARK: - Diary Page
+// MARK: - Diary View
 
 struct DiaryView: View {
     @EnvironmentObject var appData: AppData
     @State private var selectedDate: Date = Date()
-    @State private var showAddFoodSheet = false
-    @State private var selectedMacro: String? = nil
-    @State private var macroBreakdown: [(String, Double)] = []
-    @State private var showMacroDetails = false
+    @State private var showDatePicker: Bool = false
+    @State private var showQuickAddFoodEntry: Bool = false
     
-    /// Formats the selected date as “Today” (if today) or “MMM d”
-    var formattedDate: String {
-        if Calendar.current.isDateInToday(selectedDate) {
+    // Format header title based on date.
+    func headerTitle(for date: Date) -> String {
+        if Calendar.current.isDateInToday(date) {
             return "Today"
         } else {
             let formatter = DateFormatter()
-            formatter.dateFormat = "MMM d"
-            return formatter.string(from: selectedDate)
+            if Calendar.current.component(.year, from: date) == Calendar.current.component(.year, from: Date()) {
+                formatter.dateFormat = "MMM d"
+            } else {
+                formatter.dateFormat = "MMM d, yyyy"
+            }
+            return formatter.string(from: date)
         }
+    }
+    
+    var totalMacros: (kcals: Double, protein: Double, carbs: Double, fats: Double, sugars: Double) {
+        let entries = appData.diaryEntries.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+        let kcals = entries.reduce(0) { $0 + ($1.food.totalKcals * $1.portionSize) }
+        let protein = entries.reduce(0) { $0 + ($1.food.totalProtein * $1.portionSize) }
+        let carbs = entries.reduce(0) { $0 + ($1.food.totalCarbs * $1.portionSize) }
+        let fats = entries.reduce(0) { $0 + ($1.food.totalFats * $1.portionSize) }
+        let sugars = entries.reduce(0) { $0 + ($1.food.totalSugars * $1.portionSize) }
+        return (kcals, protein, carbs, fats, sugars)
     }
     
     var body: some View {
         NavigationView {
-            VStack {
-                // Header with simplified date display and a compact DatePicker.
+            VStack(alignment: .leading) {
+                // Date header with Change Date button.
                 HStack {
-                    Text(formattedDate)
+                    Text(headerTitle(for: selectedDate))
                         .font(.largeTitle)
-                        .bold()
+                        .padding(.horizontal)
                     Spacer()
-                    DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                        .labelsHidden()
-                        .datePickerStyle(CompactDatePickerStyle())
-                }
-                .padding()
-                
-                // Filter diary entries for the selected day.
-                let diaryForSelectedDay = appData.diaryEntries.filter {
-                    Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
-                }
-                
-                // Calculate total macros consumed that day.
-                let totalKcals   = diaryForSelectedDay.reduce(0) { $0 + $1.food.kcals }
-                let totalProtein = diaryForSelectedDay.reduce(0) { $0 + $1.food.protein }
-                let totalCarbs   = diaryForSelectedDay.reduce(0) { $0 + $1.food.carbs }
-                let totalFats    = diaryForSelectedDay.reduce(0) { $0 + $1.food.fats }
-                let totalSugars  = diaryForSelectedDay.reduce(0) { $0 + $1.food.sugars }
-                
-                // Main scroll view for the progress bars.
-                ScrollView {
-                    VStack(spacing: 20) {
-                        MacroProgressView(macroName: "Calories", total: totalKcals, goal: appData.macroGoals.kcals, unit: "kcal") {
-                            showMacroDetails(for: "Calories", macroValue: { $0.kcals }, unit: "kcal")
-                        }
-                        MacroProgressView(macroName: "Protein", total: totalProtein, goal: appData.macroGoals.protein, unit: "g") {
-                            showMacroDetails(for: "Protein", macroValue: { $0.protein }, unit: "g")
-                        }
-                        MacroProgressView(macroName: "Carbs", total: totalCarbs, goal: appData.macroGoals.carbs, unit: "g") {
-                            showMacroDetails(for: "Carbs", macroValue: { $0.carbs }, unit: "g")
-                        }
-                        MacroProgressView(macroName: "Fats", total: totalFats, goal: appData.macroGoals.fats, unit: "g") {
-                            showMacroDetails(for: "Fats", macroValue: { $0.fats }, unit: "g")
-                        }
-                        MacroProgressView(macroName: "Sugars", total: totalSugars, goal: appData.macroGoals.sugars, unit: "g") {
-                            showMacroDetails(for: "Sugars", macroValue: { $0.sugars }, unit: "g")
-                        }
+                    Button("Change Date") {
+                        showDatePicker.toggle()
                     }
-                    .padding()
+                    .padding(.horizontal)
+                }
+                if showDatePicker {
+                    DatePicker("Select Date", selection: $selectedDate, displayedComponents: [.date])
+                        .datePickerStyle(GraphicalDatePickerStyle())
+                        .padding(.horizontal)
                 }
                 
-                let groupedEntries = Dictionary(grouping: diaryForSelectedDay, by: { $0.category })
+                // Macro progress bars with percentages.
+                VStack(alignment: .leading, spacing: 10) {
+                    MacroProgressView(title: "Calories", value: totalMacros.kcals, goal: appData.macroGoals.kcals)
+                    MacroProgressView(title: "Protein", value: totalMacros.protein, goal: appData.macroGoals.protein)
+                    MacroProgressView(title: "Carbs", value: totalMacros.carbs, goal: appData.macroGoals.carbs)
+                    MacroProgressView(title: "Fats", value: totalMacros.fats, goal: appData.macroGoals.fats)
+                    MacroProgressView(title: "Sugars", value: totalMacros.sugars, goal: appData.macroGoals.sugars)
+                }
+                .padding(.horizontal)
                 
-                // List of diary entries.
+                // List diary entries grouped by meal type.
                 List {
-                    ForEach(MealCategory.allCases, id: \.self) { category in
-                            if let entries = groupedEntries[category], !entries.isEmpty {
-                                Section(header: Text(category.rawValue)) {
-                                    ForEach(entries) { entry in
-                                        VStack(alignment: .leading) {
-                                            Text(entry.food.name)
-                                                .font(.headline)
-                                            HStack {
-                                                Text("kcal: \(entry.food.kcals, specifier: "%.0f")")
-                                                Text("Protein: \(entry.food.protein, specifier: "%.1f")g")
-                                                Text("Carbs: \(entry.food.carbs, specifier: "%.1f")g")
-                                            }
-                                            HStack {
-                                                Text("Fats: \(entry.food.fats, specifier: "%.1f")g")
-                                                Text("Sugars: \(entry.food.sugars, specifier: "%.1f")g")
-                                            }
-                                        }
+                    ForEach(MealType.allCases, id: \.self) { meal in
+                        Section(header: Text(meal.rawValue)) {
+                            let entries = appData.diaryEntries.filter {
+                                Calendar.current.isDate($0.date, inSameDayAs: selectedDate) && $0.mealType == meal
+                            }
+                            if entries.isEmpty {
+                                Text("No entries")
+                                    .foregroundColor(.secondary)
+                            } else {
+                                ForEach(entries) { entry in
+                                    VStack(alignment: .leading) {
+                                        Text(entry.food.name)
+                                            .font(.headline)
+                                        Text("Portion: \(entry.portionSize, specifier: "%.1f") \(entry.food.portionName)")
+                                            .font(.subheadline)
                                     }
-                                    .onDelete(perform: { indexSet in
-                                        deleteDiaryEntry(at: indexSet, from: entries)
-                                    })
                                 }
                             }
                         }
-                }
-                
-                // Button to add a saved food to the diary.
-                Button(action: {
-                    showAddFoodSheet = true
-                }) {
-                    Text("Add Food")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .padding([.leading, .trailing])
-                }
-                .padding(.bottom)
-                .sheet(isPresented: $showMacroDetails) {
-                    NavigationView {
-                        List(macroBreakdown, id: \.0) { foodName, value in
-                            HStack {
-                                Text(foodName)
-                                Spacer()
-                                Text("\(value, specifier: "%.1f") \(selectedMacro ?? "")")
-                            }
-                        }
-                        .navigationTitle("\(selectedMacro ?? "") Breakdown")
                     }
                 }
             }
             .navigationTitle("Diary")
-            .sheet(isPresented: $showAddFoodSheet) {
-                AddFoodToDiaryView(selectedDate: selectedDate)
+            .navigationBarItems(trailing: Button(action: {
+                showQuickAddFoodEntry = true
+            }, label: {
+                Image(systemName: "plus")
+            }))
+            .sheet(isPresented: $showQuickAddFoodEntry) {
+                QuickAddFoodEntryView(diaryDate: selectedDate)
                     .environmentObject(appData)
             }
         }
     }
-    
-    /// Deletes diary entries using the filtered indices.
-    func deleteDiaryEntry(at offsets: IndexSet, from categoryEntries: [DiaryEntry]) {
-        let indicesToDelete = offsets.map { appData.diaryEntries.firstIndex(of: categoryEntries[$0])! }
-        for index in indicesToDelete.sorted(by: >) {
-            appData.diaryEntries.remove(at: index)
-        }
-    }
-
-    
-    func showMacroDetails(for macro: String, macroValue: (Food) -> Double, unit: String) {
-        let diaryForSelectedDay = appData.diaryEntries.filter {
-            Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
-        }
-        
-        let breakdown = diaryForSelectedDay.map { ($0.food.name, macroValue($0.food)) }
-        
-        self.selectedMacro = macro
-        self.macroBreakdown = breakdown
-        self.showMacroDetails = true
-    }
-
 }
 
-/// A view that displays a progress bar for one macro.
 struct MacroProgressView: View {
-    var macroName: String
-    var total: Double
+    var title: String
+    var value: Double
     var goal: Double
-    var unit: String
-    var onTap: () -> Void
     
     var percentage: Double {
-        goal > 0 ? (total / goal) * 100 : 0
-    }
-    
-    /// Returns the fraction (0...1) of the goal reached.
-    var progress: Double {
-        goal > 0 ? min(total / goal, 1.0) : 0.0
-    }
-    
-    var progressColor: Color {
-        return total > goal ? .red : .blue
-    }
-    
-    var formattedPercentage: String {
-        total > goal ? "\(Int(percentage))%" : "\(Int(percentage))%"
+        guard goal > 0 else { return 0 }
+        return min(value / goal, 1.0)
     }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             HStack {
-                Text("\(macroName): \(total, specifier: "%.1f")/\(goal, specifier: "%.1f") \(unit)")
+                Text(title)
                 Spacer()
-                Text(formattedPercentage) //Show percentage
-                    .bold()
-                    .foregroundColor(progressColor)
+                Text("\(Int(value))/\(Int(goal)) (\(Int(percentage * 100))%)")
+                    .font(.caption)
             }
-            ProgressView(value: progress)
-                .accentColor(progressColor)
-                .onTapGesture {
-                    onTap()
-                }
+            ProgressView(value: percentage)
+                .progressViewStyle(LinearProgressViewStyle(tint: .blue))
         }
     }
 }
 
-/// A view (presented as a sheet) that lists saved foods so the user can add one to the diary.
-struct AddFoodToDiaryView: View {
-    @EnvironmentObject var appData: AppData
-    var selectedDate: Date
+// MARK: - Quick Add Food Entry (Diary)
+
+struct QuickAddFoodEntryView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var appData: AppData
     
-    @State private var name: String = ""
+    let diaryDate: Date
+    @State private var foodName: String = ""
+    @State private var mealType: MealType = .breakfast
+    @State private var servings: String = "1"
     @State private var kcals: String = ""
     @State private var protein: String = ""
     @State private var carbs: String = ""
     @State private var fats: String = ""
     @State private var sugars: String = ""
     
-    @State private var selectedCategory: MealCategory = .uncategorized
-    
     var body: some View {
         NavigationView {
             Form {
-                // Section for entering food details
                 Section(header: Text("Food Details")) {
-                    TextField("Name", text: $name)
-                    TextField("Calories", text: $kcals)
-                        .keyboardType(.decimalPad)
-                    TextField("Protein (g)", text: $protein)
-                        .keyboardType(.decimalPad)
-                    TextField("Carbs (g)", text: $carbs)
-                        .keyboardType(.decimalPad)
-                    TextField("Fats (g)", text: $fats)
-                        .keyboardType(.decimalPad)
-                    TextField("Sugars (g)", text: $sugars)
-                        .keyboardType(.decimalPad)
-                }
-                
-                // Section for selecting meal category
-                Section(header: Text("Select Category")) {
-                    Picker("Category", selection: $selectedCategory) {
-                        ForEach(MealCategory.allCases, id: \.self) { category in
-                            Text(category.rawValue).tag(category)
+                    TextField("Food Name", text: $foodName)
+                    Picker("Meal Type", selection: $mealType) {
+                        ForEach(MealType.allCases, id: \.self) { meal in
+                            Text(meal.rawValue)
                         }
                     }
-                    .pickerStyle(MenuPickerStyle()) // Dropdown-style picker
+                    TextField("Servings", text: $servings)
+                        .keyboardType(.decimalPad)
                 }
-            }
-            .navigationTitle("Add Food")
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    presentationMode.wrappedValue.dismiss()
-                },
-                trailing: Button("Save") {
-                    saveFood()
-                }
-            )
-        }
-    }
-    
-    /// Saves the food entry and adds it to the diary
-    func saveFood() {
-        guard !name.isEmpty,
-              let kcalsValue = Double(kcals),
-              let proteinValue = Double(protein),
-              let carbsValue = Double(carbs),
-              let fatsValue = Double(fats),
-              let sugarsValue = Double(sugars) else {
-            // You could add an alert here for invalid input
-            return
-        }
-        
-        let newFood = Food(name: name, kcals: kcalsValue, protein: proteinValue, carbs: carbsValue, fats: fatsValue, sugars: sugarsValue)
-        let newEntry = DiaryEntry(date: selectedDate, food: newFood, category: selectedCategory)
-        
-        appData.diaryEntries.append(newEntry)
-        presentationMode.wrappedValue.dismiss()
-    }
-}
-
-// MARK: - Foods Page
-
-struct FoodsView: View {
-    @EnvironmentObject var appData: AppData
-    @State private var showAddFoodForm = false
-    
-    var body: some View {
-        NavigationView {
-            List {
-                ForEach(appData.savedFoods) { food in
-                    // Use a DisclosureGroup to toggle display of macro details.
-                    DisclosureGroup(
-                        content: {
-                            VStack(alignment: .leading) {
-                                Text("Calories: \(food.kcals, specifier: "%.0f")")
-                                Text("Protein: \(food.protein, specifier: "%.1f")g")
-                                Text("Carbs: \(food.carbs, specifier: "%.1f")g")
-                                Text("Fats: \(food.fats, specifier: "%.1f")g")
-                                Text("Sugars: \(food.sugars, specifier: "%.1f")g")
-                            }
-                            .padding(.leading)
-                        },
-                        label: {
-                            Text(food.name)
-                                .font(.headline)
-                        }
-                    )
-                }
-                .onDelete(perform: deleteFood)
-            }
-            .navigationTitle("Foods")
-            .navigationBarItems(trailing: Button(action: {
-                showAddFoodForm = true
-            }) {
-                Image(systemName: "plus")
-            })
-            .sheet(isPresented: $showAddFoodForm) {
-                AddFoodFormView()
-                    .environmentObject(appData)
-            }
-        }
-    }
-    
-    func deleteFood(at offsets: IndexSet) {
-        appData.savedFoods.remove(atOffsets: offsets)
-    }
-}
-
-/// A form view to add a new food to the saved foods list.
-struct AddFoodFormView: View {
-    @EnvironmentObject var appData: AppData
-    @Environment(\.presentationMode) var presentationMode
-    
-    @State private var name: String = ""
-    @State private var kcals: String = ""
-    @State private var protein: String = ""
-    @State private var carbs: String = ""
-    @State private var fats: String = ""
-    @State private var sugars: String = ""
-    
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Food Details")) {
-                    TextField("Name", text: $name)
+                Section(header: Text("Macros per Serving")) {
                     TextField("Calories", text: $kcals)
                         .keyboardType(.decimalPad)
                     TextField("Protein", text: $protein)
@@ -427,32 +303,428 @@ struct AddFoodFormView: View {
                         .keyboardType(.decimalPad)
                 }
             }
-            .navigationTitle("Add Food")
-            .navigationBarItems(leading: Button("Cancel") {
-                presentationMode.wrappedValue.dismiss()
-            }, trailing: Button("Save") {
-                saveFood()
-            })
+            .navigationTitle("Quick Add Food")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") { presentationMode.wrappedValue.dismiss() }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add") { addQuickFood() }
+                }
+            }
         }
     }
     
-    func saveFood() {
-        guard !name.isEmpty,
-              let kcalsValue = Double(kcals),
-              let proteinValue = Double(protein),
-              let carbsValue = Double(carbs),
-              let fatsValue = Double(fats),
-              let sugarsValue = Double(sugars) else {
-            return
-        }
+    func addQuickFood() {
+        guard !foodName.isEmpty,
+              let servingsVal = Double(servings),
+              let kcalsVal = Double(kcals),
+              let proteinVal = Double(protein),
+              let carbsVal = Double(carbs),
+              let fatsVal = Double(fats),
+              let sugarsVal = Double(sugars) else { return }
         
-        let newFood = Food(name: name, kcals: kcalsValue, protein: proteinValue, carbs: carbsValue, fats: fatsValue, sugars: sugarsValue)
-        appData.savedFoods.append(newFood)
+        let manualMacros = MacroGoals(kcals: kcalsVal, protein: proteinVal, carbs: carbsVal, fats: fatsVal, sugars: sugarsVal)
+        let quickFood = Food(name: foodName, ingredients: [], portionName: "serving", portionSize: 1, manualMacros: manualMacros)
+        let entry = DiaryEntry(date: diaryDate, mealType: mealType, food: quickFood, portionSize: servingsVal)
+        appData.diaryEntries.append(entry)
         presentationMode.wrappedValue.dismiss()
     }
 }
 
-// MARK: - Settings Page
+// MARK: - Foods View
+
+struct FoodsView: View {
+    @EnvironmentObject var appData: AppData
+    @State private var editingFoodIndex: Int? = nil
+    @State private var foodsSearchText: String = ""
+    
+    // Compute indices of foods matching the search text.
+    var filteredFoodIndices: [Int] {
+        appData.savedFoods.enumerated().compactMap { index, food in
+            (foodsSearchText.isEmpty || food.name.localizedCaseInsensitiveContains(foodsSearchText)) ? index : nil
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(filteredFoodIndices, id: \.self) { index in
+                    let foodBinding = $appData.savedFoods[index]
+                    DisclosureGroup {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Macros per \(foodBinding.wrappedValue.portionSize, specifier: "%.0f") \(foodBinding.wrappedValue.portionName):")
+                            Text("Calories: \(Int(foodBinding.wrappedValue.totalKcals)) kcal")
+                            Text("Protein: \(foodBinding.wrappedValue.totalProtein, specifier: "%.1f") g")
+                            Text("Carbs: \(foodBinding.wrappedValue.totalCarbs, specifier: "%.1f") g")
+                            Text("Fats: \(foodBinding.wrappedValue.totalFats, specifier: "%.1f") g")
+                            Text("Sugars: \(foodBinding.wrappedValue.totalSugars, specifier: "%.1f") g")
+                            
+                            Text("")  // Empty line between macros and ingredients.
+                            
+                            if !foodBinding.wrappedValue.ingredients.isEmpty {
+                                Text("Ingredients:")
+                                    .fontWeight(.bold)
+                                Text("")  // Empty line after "Ingredients:"
+                                ForEach(foodBinding.wrappedValue.ingredients) { ingredientEntry in
+                                    Text("\(ingredientEntry.ingredient.name): \(ingredientEntry.amount, specifier: "%.1f")")
+                                }
+                            }
+                            
+                            Text("")  // Empty line before the Edit button.
+                            
+                            Button("Edit") {
+                                editingFoodIndex = index
+                            }
+                            .font(.headline)
+                            .padding(.vertical, 8)
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue.opacity(0.2))
+                            .cornerRadius(8)
+                        }
+                    } label: {
+                        Text(foodBinding.wrappedValue.name)
+                    }
+                }
+                .onDelete(perform: deleteFood)
+            }
+            .searchable(text: $foodsSearchText, prompt: "Search Foods")
+            .navigationTitle("Foods")
+            .navigationBarItems(trailing: Button(action: {
+                let newFood = Food(name: "New Food", ingredients: [], portionName: "portion", portionSize: 1)
+                appData.savedFoods.append(newFood)
+                if let newIndex = appData.savedFoods.firstIndex(where: { $0.id == newFood.id }) {
+                    editingFoodIndex = newIndex
+                }
+            }, label: {
+                Image(systemName: "plus")
+            }))
+            .sheet(isPresented: Binding<Bool>(
+                get: { editingFoodIndex != nil },
+                set: { if !$0 { editingFoodIndex = nil } }
+            )) {
+                if let index = editingFoodIndex {
+                    EditFoodView(food: $appData.savedFoods[index])
+                }
+            }
+        }
+    }
+    
+    func deleteFood(at offsets: IndexSet) {
+        let indicesToDelete = offsets.map { filteredFoodIndices[$0] }
+        for index in indicesToDelete.sorted(by: >) {
+            appData.savedFoods.remove(at: index)
+        }
+    }
+}
+
+// MARK: - Edit Food View
+
+struct EditFoodView: View {
+    @Binding var food: Food
+    @EnvironmentObject var appData: AppData
+    @Environment(\.presentationMode) var presentationMode
+    @State private var showAddIngredientSheet = false
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Food Name")) {
+                    TextField("Name", text: $food.name)
+                }
+                Section(header: Text("Total Macros per \(food.portionSize, specifier: "%.0f") \(food.portionName)")) {
+                    Text("Calories: \(Int(food.totalKcals)) kcal")
+                    Text("Protein: \(food.totalProtein, specifier: "%.1f") g")
+                    Text("Carbs: \(food.totalCarbs, specifier: "%.1f") g")
+                    Text("Fats: \(food.totalFats, specifier: "%.1f") g")
+                    Text("Sugars: \(food.totalSugars, specifier: "%.1f") g")
+                }
+                Section(header: Text("Ingredients")) {
+                    ForEach(food.ingredients) { ingredientEntry in
+                        Text("\(ingredientEntry.ingredient.name): \(ingredientEntry.amount, specifier: "%.1f")")
+                    }
+                    .onDelete(perform: deleteIngredient)
+                    Button("Add Ingredient") {
+                        showAddIngredientSheet = true
+                    }
+                }
+            }
+            .navigationTitle("Edit Food")
+            .navigationBarItems(trailing: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            })
+            .sheet(isPresented: $showAddIngredientSheet) {
+                AddIngredientToFoodView(food: $food)
+                    .environmentObject(appData)
+            }
+        }
+    }
+    
+    func deleteIngredient(at offsets: IndexSet) {
+        food.ingredients.remove(atOffsets: offsets)
+    }
+}
+
+
+
+struct IngredientsView: View {
+    @EnvironmentObject var appData: AppData
+    @State private var searchText: String = ""
+    @State private var showAddIngredientForm = false
+    @State private var editingIngredient: Ingredient?
+    
+    // Filter ingredients by name using the search text.
+    var filteredIngredients: [Ingredient] {
+        if searchText.isEmpty {
+            return appData.savedIngredients
+        } else {
+            return appData.savedIngredients.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            List {
+                // Group ingredients by category.
+                ForEach(IngredientCategory.allCases, id: \.self) { category in
+                    let ingredientsInCategory = filteredIngredients.filter { $0.category == category }
+                    if !ingredientsInCategory.isEmpty {
+                        Section(header: Text(category.rawValue)) {
+                            ForEach(ingredientsInCategory) { ingredient in
+                                DisclosureGroup {
+                                    VStack(alignment: .leading) {
+                                        Text("Type: \(ingredient.type.rawValue)")
+                                        Text("Calories: \(ingredient.kcalsPer100, specifier: "%.1f") kcal")
+                                        Text("Protein: \(ingredient.proteinPer100, specifier: "%.1f") g")
+                                        Text("Carbs: \(ingredient.carbsPer100, specifier: "%.1f") g")
+                                        Text("Fats: \(ingredient.fatsPer100, specifier: "%.1f") g")
+                                        Text("Sugars: \(ingredient.sugarsPer100, specifier: "%.1f") g")
+                                        
+                                        Text("") // Extra spacing
+                                        
+                                        Button("Edit") {
+                                            editingIngredient = ingredient
+                                        }
+                                        .font(.headline)
+                                        .padding(.vertical, 8)
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.blue.opacity(0.2))
+                                        .cornerRadius(8)
+                                    }
+                                    .padding(.leading)
+                                } label: {
+                                    Text(ingredient.name)
+                                        .font(.headline)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Ingredients")
+            .navigationBarItems(trailing: Button(action: {
+                showAddIngredientForm = true
+            }) {
+                Image(systemName: "plus")
+            })
+            .searchable(text: $searchText, prompt: "Search Ingredients")
+            .sheet(isPresented: $showAddIngredientForm) {
+                AddIngredientFormView()
+                    .environmentObject(appData)
+            }
+            .sheet(item: $editingIngredient) { ingredient in
+                // Present an edit view for the ingredient.
+                // You can adjust this view as needed.
+                EditIngredientView(ingredient: Binding(
+                    get: {
+                        if let index = appData.savedIngredients.firstIndex(of: ingredient) {
+                            return appData.savedIngredients[index]
+                        }
+                        return ingredient
+                    },
+                    set: { newValue in
+                        if let index = appData.savedIngredients.firstIndex(of: ingredient) {
+                            appData.savedIngredients[index] = newValue
+                        }
+                    }
+                ))
+            }
+        }
+    }
+}
+
+struct AddIngredientFormView: View {
+    @EnvironmentObject var appData: AppData
+    @Environment(\.presentationMode) var presentationMode
+
+    @State private var name: String = ""
+    @State private var type: IngredientType = .solid
+    @State private var category: IngredientCategory = .others
+    @State private var kcals: String = ""
+    @State private var protein: String = ""
+    @State private var carbs: String = ""
+    @State private var fats: String = ""
+    @State private var sugars: String = ""
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Ingredient Details")) {
+                    TextField("Name", text: $name)
+                    Picker("Type", selection: $type) {
+                        ForEach(IngredientType.allCases, id: \.self) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    Picker("Category", selection: $category) {
+                        ForEach(IngredientCategory.allCases, id: \.self) { cat in
+                            Text(cat.rawValue).tag(cat)
+                        }
+                    }
+                }
+                Section(header: Text("Macros per 100g/ml")) {
+                    TextField("Calories", text: $kcals)
+                        .keyboardType(.decimalPad)
+                    TextField("Protein (g)", text: $protein)
+                        .keyboardType(.decimalPad)
+                    TextField("Carbs (g)", text: $carbs)
+                        .keyboardType(.decimalPad)
+                    TextField("Fats (g)", text: $fats)
+                        .keyboardType(.decimalPad)
+                    TextField("Sugars (g)", text: $sugars)
+                        .keyboardType(.decimalPad)
+                }
+            }
+            .navigationTitle("Add Ingredient")
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    presentationMode.wrappedValue.dismiss()
+                },
+                trailing: Button("Save") {
+                    saveIngredient()
+                }
+            )
+        }
+    }
+    
+    func saveIngredient() {
+        guard !name.isEmpty else { return }
+        let newIngredient = Ingredient(
+            name: name,
+            type: type,
+            kcalsPer100: Double(kcals) ?? 0,
+            proteinPer100: Double(protein) ?? 0,
+            carbsPer100: Double(carbs) ?? 0,
+            fatsPer100: Double(fats) ?? 0,
+            sugarsPer100: Double(sugars) ?? 0,
+            category: category
+        )
+        appData.savedIngredients.append(newIngredient)
+        presentationMode.wrappedValue.dismiss()
+    }
+}
+
+
+// MARK: - Add Ingredient to Food View
+struct AddIngredientToFoodView: View {
+    @EnvironmentObject var appData: AppData
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var food: Food
+    @State private var selectedIngredient: Ingredient?
+    @State private var amount: String = ""
+    
+    // Extracted picker to simplify type-checking.
+    var ingredientPicker: some View {
+        Picker("Ingredient", selection: $selectedIngredient) {
+            ForEach(appData.savedIngredients, id: \.id) { ingredient in
+                Text(ingredient.name)
+                    .tag(ingredient as Ingredient?)
+            }
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Select Ingredient")) {
+                    ingredientPicker
+                }
+                Section(header: Text("Amount (g or ml)")) {
+                    TextField("Amount", text: $amount)
+                        .keyboardType(.decimalPad)
+                }
+            }
+            .navigationTitle("Add Ingredient")
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    presentationMode.wrappedValue.dismiss()
+                },
+                trailing: Button("Add", action: addIngredient)
+            )
+        }
+    }
+    
+    func addIngredient() {
+        guard let ingredient = selectedIngredient, let amt = Double(amount) else { return }
+        let foodIngredient = FoodIngredient(ingredient: ingredient, amount: amt)
+        food.ingredients.append(foodIngredient)
+        presentationMode.wrappedValue.dismiss()
+    }
+}
+
+// MARK: - Edit Ingredient View
+
+struct EditIngredientView: View {
+    @Binding var ingredient: Ingredient
+    @Environment(\.presentationMode) var presentationMode
+    
+    // A basic number formatter for decimal values.
+    static let numberFormatter: NumberFormatter = {
+        let nf = NumberFormatter()
+        nf.numberStyle = .decimal
+        return nf
+    }()
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Ingredient Details")) {
+                    TextField("Name", text: $ingredient.name)
+                    Picker("Type", selection: $ingredient.type) {
+                        ForEach(IngredientType.allCases, id: \.self) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    Picker("Category", selection: $ingredient.category) {
+                        ForEach(IngredientCategory.allCases, id: \.self) { cat in
+                            Text(cat.rawValue).tag(cat)
+                        }
+                    }
+                }
+                Section(header: Text("Macros per 100g/ml")) {
+                    TextField("Calories", value: $ingredient.kcalsPer100, formatter: Self.numberFormatter)
+                        .keyboardType(.decimalPad)
+                    TextField("Protein", value: $ingredient.proteinPer100, formatter: Self.numberFormatter)
+                        .keyboardType(.decimalPad)
+                    TextField("Carbs", value: $ingredient.carbsPer100, formatter: Self.numberFormatter)
+                        .keyboardType(.decimalPad)
+                    TextField("Fats", value: $ingredient.fatsPer100, formatter: Self.numberFormatter)
+                        .keyboardType(.decimalPad)
+                    TextField("Sugars", value: $ingredient.sugarsPer100, formatter: Self.numberFormatter)
+                        .keyboardType(.decimalPad)
+                }
+            }
+            .navigationTitle("Edit Ingredient")
+            .navigationBarItems(trailing: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            })
+        }
+    }
+}
+
+// MARK: - Settings View
 
 struct SettingsView: View {
     @EnvironmentObject var appData: AppData
@@ -466,48 +738,25 @@ struct SettingsView: View {
         NavigationView {
             Form {
                 Section(header: Text("Set Macro Goals")) {
-                    HStack {
-                        Text("Calories")
-                        Spacer()
-                        TextField("Goal", text: $kcalsGoal)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
-                        Text("Protein")
-                        Spacer()
-                        TextField("Goal", text: $proteinGoal)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
-                        Text("Carbs")
-                        Spacer()
-                        TextField("Goal", text: $carbsGoal)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
-                        Text("Fats")
-                        Spacer()
-                        TextField("Goal", text: $fatsGoal)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
-                        Text("Sugars")
-                        Spacer()
-                        TextField("Goal", text: $sugarsGoal)
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                    }
+                    GoalField(title: "Calories", value: $kcalsGoal)
+                    GoalField(title: "Protein", value: $proteinGoal)
+                    GoalField(title: "Carbs", value: $carbsGoal)
+                    GoalField(title: "Fats", value: $fatsGoal)
+                    GoalField(title: "Sugars", value: $sugarsGoal)
                 }
             }
             .navigationTitle("Settings")
-            .navigationBarItems(trailing: Button("Save") {
-                saveSettings()
-            })
             .onAppear(perform: loadSettings)
+            .onDisappear(perform: saveSettings)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        saveSettings()
+                        dismissKeyboard()
+                    }
+                }
+            }
         }
     }
     
@@ -526,6 +775,24 @@ struct SettingsView: View {
            let fatsValue = Double(fatsGoal),
            let sugarsValue = Double(sugarsGoal) {
             appData.macroGoals = MacroGoals(kcals: kcalsValue, protein: proteinValue, carbs: carbsValue, fats: fatsValue, sugars: sugarsValue)
+        }
+    }
+    
+    func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+struct GoalField: View {
+    var title: String
+    @Binding var value: String
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            TextField("Goal", text: $value)
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
         }
     }
 }
