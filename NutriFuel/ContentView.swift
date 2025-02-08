@@ -159,6 +159,12 @@ struct DiaryView: View {
         }
     }
     
+    func diaryEntries(for meal: MealType, on date: Date) -> [DiaryEntry] {
+        appData.diaryEntries.filter {
+            Calendar.current.isDate($0.date, inSameDayAs: date) && $0.mealType == meal
+        }
+    }
+    
     var totalMacros: (kcals: Double, protein: Double, carbs: Double, fats: Double, sugars: Double) {
         let entries = appData.diaryEntries.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
         let kcals = entries.reduce(0) { $0 + ($1.food.totalKcals * $1.portionSize) }
@@ -203,9 +209,7 @@ struct DiaryView: View {
                 List {
                     ForEach(MealType.allCases, id: \.self) { meal in
                         Section(header: Text(meal.rawValue)) {
-                            let entries = appData.diaryEntries.filter {
-                                Calendar.current.isDate($0.date, inSameDayAs: selectedDate) && $0.mealType == meal
-                            }
+                            let entries = diaryEntries(for: meal, on: selectedDate)
                             if entries.isEmpty {
                                 Text("No entries")
                                     .foregroundColor(.secondary)
@@ -218,10 +222,19 @@ struct DiaryView: View {
                                             .font(.subheadline)
                                     }
                                 }
+                                .onDelete { indexSet in
+                                    // Determine which diary entries to remove
+                                    let entriesToDelete = indexSet.map { entries[$0] }
+                                    // Remove matching entries from the global diaryEntries array.
+                                    appData.diaryEntries.removeAll { diaryEntry in
+                                        entriesToDelete.contains(where: { $0.id == diaryEntry.id })
+                                    }
+                                }
                             }
                         }
                     }
                 }
+
             }
             .navigationTitle("Diary")
             .navigationBarItems(trailing: Button(action: {
